@@ -1,7 +1,11 @@
-const Colors = {
-  text: '#000000',
-  textSecondary: '#808080',
-  border: '#E0E0E0',
-};
+const tintColorLight = "#2f95dc";
 
-export default Colors;
+export default {
+  light: {
+    text: "#000",
+    background: "#fff",
+    tint: tintColorLight,
+    tabIconDefault: "#ccc",
+    tabIconSelected: tintColorLight,
+  },
+};
