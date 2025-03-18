@@ -24,7 +24,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Instagram",
+          title: "Lookym",
           headerTitleStyle: {
             fontFamily: Platform.OS === 'ios' ? 'Noteworthy-Bold' : 'normal',
             fontSize: 24,
