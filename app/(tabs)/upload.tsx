@@ -35,7 +35,7 @@ export default function UploadScreen() {
   const handleUpload = async () => {
     if (!videoUri || !caption || !isBusiness) return;
 
-    setUploading(true);
+    setIsUploading(true);
 
     try {
       // In a real app, you would upload to Cloudinary here
@@ -64,7 +64,7 @@ export default function UploadScreen() {
     } catch (error) {
       console.error('Error uploading video: ', error);
     } finally {
-      setUploading(false);
+      setIsUploading(false);
     }
   };
 
