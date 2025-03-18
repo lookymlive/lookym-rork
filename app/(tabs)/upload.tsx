@@ -15,7 +15,7 @@ export default function UploadScreen() {
   const [isUploading, setIsUploading] = useState(false);
   const { addVideo } = useVideoStore();
   const { currentUser } = useAuthStore();
-  const { isDark, colors } = useColorSchema();
+ const { isDark, colors } = useColorSchema();
 
   // Check if user is a business
   const isBusiness = currentUser?.role === 'business';
