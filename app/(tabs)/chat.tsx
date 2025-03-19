@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
-import { useChatStore } from '../stores/chat-store';
-import { useAuthStore } from '../stores/auth-store';
-import { useColorSchema } from '../hooks/useColorSchema';
+import { useChatStore } from '@/store/chat-store';
+import { useAuthStore } from '@/store/auth-store';
+import { useColorSchema } from '@/hooks/useColorScheme';
 import { formatTimeAgo } from '@/utils/time-format';
 import { router } from 'expo-router';
+import { ChatParticipant } from '@/store/chat-store';
 
 export default function ChatScreen() {
   const { chats, loadChats } = useChatStore();
   const { currentUser } = useAuthStore();
   const { isDark, colors } = useColorSchema();
-  const [loading, setLoading] = useState(false);();
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +31,7 @@ export default function ChatScreen() {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
         <View style={styles.loadingContainer}>
         <Text style={[styles.loadingText, { color: colors.text }]}>Loading chats...</Text>
         </View>
@@ -63,12 +65,13 @@ export default function ChatScreen() {
         data={chats}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
-          const otherUser = item.participants.find((p) => p.id !== currentUser?.id);
-          if (!otherUser) { return null;
+          const otherUser = item.participants.find((p: ChatParticipant) => p.id !== currentUser?.id);
+          if (!otherUser) { 
+            return null;
+          }
           
           return (
-            <TouchableOpacity
-              style={[styles.chatItem, { borderBottomColor: colors.border }]}
+            <TouchableOpacity style={[styles.chatItem, { borderBottomColor: colors.border }]}
               onPress={() => navigateToChat(item.id)}
             >
               <Image
@@ -79,24 +82,25 @@ export default function ChatScreen() {
               <View style={styles.chatInfo}>
                 <View style={styles.chatHeader}>
                   <Text style={[styles.username, { color: colors.text }]}>{ otherUser?.username}</Text>
-                <Text style={[styles.timestamp, { color: colors.textSecondary }]}>
-                  {formatTimestAgo(item.lastMessage.timestamp)}
-                </Text>
-              </View>
-              <Text 
-              style={[
-                styles.lastMessage, 
-                { color: item.unreadCount > 0 ? colors.text : colors.textSecondary }
-              ]}
-              numberOfLines={1}
-              >
-                {item.lastMessage.text}
-              <Text>
-                {item.unreadCount > 0 && (
-                  <View style={[styles.unreadBadge, { backgroundColor: colors.primary }]}>
-                  <Text style={styles.unreadCount}>{item.unreadCount}</Text>
+                  <Text style={[styles.timestamp, { color: colors.textSecondary }]}>
+                    {formatTimeAgo(item.lastMessage.timestamp)}
+                  </Text> 
                 </View>
-                )}
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Text 
+                    style={[
+                      styles.lastMessage, 
+                      { color: item.unreadCount > 0 ? colors.text : colors.textSecondary }
+                    ]}
+                    numberOfLines={1}> {item.lastMessage.text}
+                  {item.unreadCount > 0 && (
+                    <View style={[styles.unreadBadge, { backgroundColor: colors.primary }]}>
+                      <Text style={styles.unreadCount}>{item.unreadCount}</Text>
+                    </View>
+                  )}
+              
+                </Text>
+                </View>
               </View>
             </TouchableOpacity>
           );
@@ -110,7 +114,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  loadingContainer: {
+  headerContainer: {
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 0.5,
@@ -122,9 +126,10 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-  }
+    justifyContent: 'center',
+  }, 
+
   loadingText: {
     fontSize: 16,
   },
@@ -141,7 +146,7 @@ const styles = StyleSheet.create({
   },
   emptySubtext: {
     fontSize: 14,
-    textAlingn: 'center',
+    textAlign: 'center',
   },
   chatItem: {
     flexDirection: 'row',
