@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Heart, MessageCircle, Send, Bookmark } from 'lucide-react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { Heart, MessageCircle, Send, Bookmark, HeartOff } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { formatNumber } from '@/utils/formatters';
+import Haptics from 'expo-haptics';
 
 interface PostFooterProps {
   caption: string;
@@ -12,9 +13,11 @@ interface PostFooterProps {
   liked: boolean;
   saved: boolean;
   onLike: () => void;
+  onUnlike: () => void;
   onComment: () => void;
   onShare: () => void;
   onSave: () => void;
+  onUnsave: () => void;
 }
 
 const PostFooter: React.FC<PostFooterProps> = ({
@@ -25,26 +28,50 @@ const PostFooter: React.FC<PostFooterProps> = ({
   liked,
   saved,
   onLike,
+  onUnlike,
   onComment,
   onShare,
   onSave,
+  onUnsave,
 }) => {
-  const renderHashtags = () => {
-    return hashtags.map((tag, index) => (
+  const handlelLikePress = () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    if (liked) {
+      onUnlike();
+    } else {
+      onLike();
+    }
+  };
+   const handlelSavePress = () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    if (saved) {
+      onUnsave();
+    } else {
+      onSave();
+    }
+  };
+
+
+
+
+   const renderHashtags = () => {
+    return hashtags.map((hashtag, index) => (
       <Text key={index} style={styles.hashtag}>
-        {tag}
+        {tag}{''}
       </Text>
     ));
   };
-
+  
   return (
     <View style={styles.container}>
       <View style={styles.actionsContainer}>
         <View style={styles.leftActions}>
-          <TouchableOpacity style={styles.actionButton} onPress={onLike}>
+          <TouchableOpacity style={styles.actionButton} onPress={handlelLikePress}>
             {liked ? (
-              <Heart size={24} color={Colors.like} fill={Colors.like} />
-            ) : (
               <Heart size={24} color={Colors.text} />
             )}
           </TouchableOpacity>
@@ -68,13 +95,15 @@ const PostFooter: React.FC<PostFooterProps> = ({
         <Text style={styles.likesText}>{formatNumber(likes)} likes</Text>
       </View>
 
+      
+      
       <View style={styles.captionContainer}>
         <Text style={styles.caption}>
-          <Text style={styles.username}>username</Text> {caption}
+          <Text style={styles.username}>username</Text> 
+          {caption}
         </Text>
+       <Text style={styles.hashtagsContainer}>{renderHashtags()}</Text>
       </View>
-
-      <Text style={styles.hashtagsContainer}>{renderHashtags()}</Text>
 
       {comments > 0 && (
         <TouchableOpacity style={styles.commentsButton} onPress={onComment}>

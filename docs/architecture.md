@@ -8,7 +8,6 @@ This document outlines the architectural design of the LOOKYM application, expla
 
 LOOKYM follows a modular architecture with clear separation of concerns:
 
-```
 lookym-project/
 ├── app/                 # 📱 Application screens and navigation
 │   ├── (tabs)/          # 🏷️ Tab-based navigation screens
@@ -24,13 +23,11 @@ lookym-project/
 ├── store/               # 🗄️ Zustand state management
 ├── types/               # 📝 TypeScript type definitions
 ├── utils/               # 🛠️ Utility functions
-```
-
----
 
 ## 🏛️ Architectural Patterns
 
 ### 📂 File-Based Routing
+
 LOOKYM uses **Expo Router's** file-based routing system, similar to Next.js:
 
 - 📁 Files in the `app/` directory automatically become routes.
@@ -39,6 +36,7 @@ LOOKYM uses **Expo Router's** file-based routing system, similar to Next.js:
 - 🔗 Dynamic routes use `[param]` syntax.
 
 ### 🏗️ Component Architecture
+
 Components follow a hierarchical structure:
 
 - **📱 Screen Components**: Top-level components that represent entire screens.
@@ -49,6 +47,7 @@ Components follow a hierarchical structure:
 ---
 
 ## 🎛️ State Management
+
 LOOKYM uses **Zustand** for state management with the following stores:
 
 - 🔐 **Auth Store**: Manages authentication state.
@@ -57,6 +56,7 @@ LOOKYM uses **Zustand** for state management with the following stores:
 - 🎥 **Video Store**: Handles video upload and playback state.
 
 Each store follows a similar pattern:
+
 - ✅ State definition with TypeScript interfaces.
 - 🔄 Action functions that modify state.
 - 💾 Persistence configuration where needed.
@@ -75,19 +75,23 @@ Each store follows a similar pattern:
 ## 🛠️ Technology Stack
 
 ### 🎨 Frontend
+
 - ⚛️ **React Native**: Core framework for mobile development.
 - 🚀 **Expo**: Development platform and toolchain.
 - 📝 **TypeScript**: For type safety and better developer experience.
 
 ### 🎛️ State Management
+
 - 🗂️ **Zustand**: Lightweight state management.
 - 💾 **AsyncStorage**: Persistence layer.
 
 ### 🌐 External Services
+
 - 🔑 **Supabase**: Authentication and database.
 - ☁️ **Cloudinary**: Video storage and streaming.
 
 ### 🎨 UI Components
+
 - 🏗️ **React Native Components**: Core UI building blocks.
 - 🚏 **Expo Router**: Navigation and routing.
 - 🖼️ **Lucide Icons**: Icon library.
@@ -95,6 +99,7 @@ Each store follows a similar pattern:
 ---
 
 ## 🔐 Authentication Flow
+
 1. 👤 User enters credentials or uses OAuth provider.
 2. 🔑 Authentication request sent to Supabase.
 3. ✅ On success, JWT token stored in secure storage.
@@ -106,12 +111,14 @@ Each store follows a similar pattern:
 ## 📺 Video System Architecture
 
 ### 📤 Upload Flow
+
 1. 📹 Video captured or selected from device.
 2. ⚙️ Processed and compressed if needed.
 3. ☁️ Uploaded to Cloudinary.
 4. 🏷️ Metadata stored in Supabase.
 
 ### 🎥 Playback Flow
+
 1. 🗂️ Video metadata fetched from Supabase.
 2. ☁️ Streaming URL generated from Cloudinary.
 3. ▶️ Video played using optimized player component.
