@@ -1,10 +1,13 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "moduleResolution": "node",
+    "typeRoots": [
+      "node_modules/@types",
+      "types"],
     "strict": true,
     "paths": {
-      "@/*": ["./*"
-    ]
+      "@/*": ["./*"]
     }
   },
   "include": [
